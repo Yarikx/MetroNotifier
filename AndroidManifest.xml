@@ -29,13 +29,13 @@
 
         <service android:name="com.cogniance.yarik.metronotifier.WorkService" />
 
-        <receiver
-            android:name="com.cogniance.yarik.metronotifier.WifiScanReceiver"
-            android:enabled="false" >
-            <intent-filter>
-                <action android:name="android.net.wifi.SCAN_RESULTS" />
-            </intent-filter>
-        </receiver>
+<!--         <receiver -->
+<!--             android:name="com.cogniance.yarik.metronotifier.WifiScanReceiver" -->
+<!--             android:enabled="false" > -->
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.net.wifi.SCAN_RESULTS" /> -->
+<!--             </intent-filter> -->
+<!--         </receiver> -->
     </application>
 
 </manifest>

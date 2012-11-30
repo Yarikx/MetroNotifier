@@ -14,14 +14,14 @@ import android.content.Context
 import com.cogniance.yarik.metronotifier.ScalaUtils._
 import scala.collection.JavaConversions._
 import android.net.wifi.ScanResult
+import android.content.IntentFilter
 
 class DebugActivity extends Activity with Scalactivity {
 
   lazy val app = getApplication().asInstanceOf[App]
   lazy val list = findView[ListView](R.id.list);
   lazy val wifiManager = getSystemService(Context.WIFI_SERVICE).asInstanceOf[WifiManager];
-  lazy val receiver = new ComponentName(this, classOf[WifiScanReceiver]);
-  lazy val pm = this.getPackageManager();
+  lazy val receiver = new WifiScanReceiver
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState);
@@ -31,24 +31,15 @@ class DebugActivity extends Activity with Scalactivity {
   protected override def onResume() {
     super.onResume();
     app.debugActivity=this;
-    pm.setComponentEnabledSetting(receiver,
-      PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-      PackageManager.DONT_KILL_APP);
-    
-//    asyncTask{
-//      wifiManager.getScanResults().toList.map(x=> "name: %s, bssid: %s".format(x.SSID, x.BSSID))
-//    }{
-//      result =>
-//        updateList(result)
-//    }
+    val filter = new IntentFilter
+    filter.addAction("android.net.wifi.SCAN_RESULTS")
+    registerReceiver(receiver, filter)
   }
 
   protected override def onPause() {
     super.onPause();
     app.debugActivity=null;
-    pm.setComponentEnabledSetting(receiver,
-      PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-      PackageManager.DONT_KILL_APP);
+    unregisterReceiver(receiver);
   }
 
   override def onCreateOptionsMenu(menu: Menu) = {
