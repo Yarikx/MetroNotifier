@@ -17,12 +17,12 @@ object Model {
 
   implicit def spot2contentValues(spot: Spot) = {
     import com.cogniance.yarik.metronotifier.db.DbOpenHelper._
-    import java.lang.Integer
+    import java.lang.Long
     
     val values = new ContentValues()
     values.put(SSID, spot.ssid)
     values.put(BSSID, spot.bssid)
-    values.put(STATION_ID, spot.station.id.asInstanceOf[Integer])
+    values.put(STATION_ID, spot.station.id.asInstanceOf[Long])
     values
   }
   

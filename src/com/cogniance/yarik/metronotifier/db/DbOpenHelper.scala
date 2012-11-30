@@ -19,11 +19,11 @@ class DbOpenHelper(context: Context) extends SQLiteOpenHelper(context, "metro", 
   val createSpotsStatement = 
     "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT,%s TEXT, %s TEXT, %s INTEGER);";
   val createStationsStatement = 
-    "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT,%s TEXT, %s TEXT, %s INTEGER);";
+    "CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT,%s TEXT);";
   
   def onCreate(db:SQLiteDatabase){
     db.execSQL(createSpotsStatement format(TABLE_SPOTS, ID, BSSID, SSID, STATION_ID))
-    db.execSQL(createSpotsStatement format(TABLE_STATIONS, ID, NAME))
+    db.execSQL(createStationsStatement format(TABLE_STATIONS, ID, NAME))
   }
   
   def onUpgrade(db:SQLiteDatabase, oldVersion:Int, currentVersion:Int){
