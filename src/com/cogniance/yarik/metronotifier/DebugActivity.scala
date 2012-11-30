@@ -17,20 +17,15 @@ import android.net.wifi.ScanResult
 
 class DebugActivity extends Activity with Scalactivity {
 
-  var app: App = null
-  var list: ListView = null
-  var wifiManager: WifiManager = null
-  var receiver: ComponentName = null
-  var pm: PackageManager = null
+  lazy val app = getApplication().asInstanceOf[App]
+  lazy val list = findView[ListView](R.id.list);
+  lazy val wifiManager = getSystemService(Context.WIFI_SERVICE).asInstanceOf[WifiManager];
+  lazy val receiver = new ComponentName(this, classOf[WifiScanReceiver]);
+  lazy val pm = this.getPackageManager();
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_debug);
-    app = getApplication().asInstanceOf[App];
-    wifiManager = getSystemService(Context.WIFI_SERVICE).asInstanceOf[WifiManager];
-    list = findView[ListView](R.id.list);
-    receiver = new ComponentName(this, classOf[WifiScanReceiver]);
-    pm = this.getPackageManager();
   }
   
   protected override def onResume() {
@@ -63,7 +58,7 @@ class DebugActivity extends Activity with Scalactivity {
   }
 
   def updateList(names: Seq[ScanResult]) {
-    val strings = names.map(x=> "name: %s, bssid: %s".format(x.SSID, x.BSSID))
+    val strings = names.map(x=> "name: %s, bssid: %s, signal=%s".format(x.SSID, x.BSSID, x.level))
     inUi {
       list.setAdapter(new ArrayAdapter(DebugActivity.this,
         android.R.layout.simple_list_item_1, strings));
