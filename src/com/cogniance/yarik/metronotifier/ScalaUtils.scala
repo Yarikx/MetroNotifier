@@ -10,8 +10,7 @@ object ScalaUtils {
     
     def inUi(r: Runnable)=runOnUiThread(r)
     def asyncTask[A](f: => A)(post: A=>Unit)=new AsyncTask[Void, Void, A](){
-      override def doInBackground(params: Void*)=f
-      
+      override def doInBackground(p: Void*)=f
       override def onPostExecute(a:A)=post(a)
     }.execute()
   }

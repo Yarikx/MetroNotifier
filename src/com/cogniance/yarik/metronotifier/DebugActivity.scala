@@ -11,8 +11,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.content.Context
-import com.cogniance.yarik.metronotifier.ScalaUtils._;
+import com.cogniance.yarik.metronotifier.ScalaUtils._
 import scala.collection.JavaConversions._
+import android.net.wifi.ScanResult
 
 class DebugActivity extends Activity with Scalactivity {
 
@@ -34,22 +35,22 @@ class DebugActivity extends Activity with Scalactivity {
   
   protected override def onResume() {
     super.onResume();
-    app.debugActivityRef.set(this);
+    app.debugActivity=this;
     pm.setComponentEnabledSetting(receiver,
       PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
       PackageManager.DONT_KILL_APP);
     
-    asyncTask{
-      wifiManager.getScanResults().toList.map(x=> "name: %s, bssid: %s".format(x.SSID, x.BSSID))
-    }{
-      result =>
-        updateList(result)
-    }
+//    asyncTask{
+//      wifiManager.getScanResults().toList.map(x=> "name: %s, bssid: %s".format(x.SSID, x.BSSID))
+//    }{
+//      result =>
+//        updateList(result)
+//    }
   }
 
   protected override def onPause() {
     super.onPause();
-    app.debugActivityRef.set(null);
+    app.debugActivity=null;
     pm.setComponentEnabledSetting(receiver,
       PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
       PackageManager.DONT_KILL_APP);
@@ -61,10 +62,11 @@ class DebugActivity extends Activity with Scalactivity {
     true
   }
 
-  def updateList(names: Seq[String]) {
+  def updateList(names: Seq[ScanResult]) {
+    val strings = names.map(x=> "name: %s, bssid: %s".format(x.SSID, x.BSSID))
     inUi {
       list.setAdapter(new ArrayAdapter(DebugActivity.this,
-        android.R.layout.simple_list_item_1, names));
+        android.R.layout.simple_list_item_1, strings));
     }
   }
 

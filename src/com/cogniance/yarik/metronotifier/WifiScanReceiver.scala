@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class WifiScanReceiver extends BroadcastReceiver{
+class WifiScanReceiver extends BroadcastReceiver{
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
+	override def onReceive(context: Context,intent: Intent) {
 		Log.d("wifi", "networks received");
-		context.startService(new Intent(context, WorkService.class));
+		context.startService(new Intent(context, classOf[WorkService]));
 	}
 
 }
