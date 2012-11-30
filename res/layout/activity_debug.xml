@@ -6,17 +6,36 @@
 
     <Button
         android:id="@+id/scan_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/scan"
-        android:onClick="scan" />
+        android:onClick="scan"
+        android:text="@string/scan" />
+
+    <EditText
+        android:id="@+id/station_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/save_button"
+        android:layout_alignBottom="@+id/save_button"
+        android:hint="@string/access_point_name"
+        android:layout_below="@+id/scan_button" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/scan_button"
+        android:onClick="saveStation"
+        android:text="@string/save" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/scan_button" />
+        android:layout_below="@+id/station_name" />
 
 </RelativeLayout>

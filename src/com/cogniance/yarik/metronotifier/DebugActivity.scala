@@ -15,6 +15,9 @@ import com.cogniance.yarik.metronotifier.ScalaUtils._
 import scala.collection.JavaConversions._
 import android.net.wifi.ScanResult
 import android.content.IntentFilter
+import android.widget.EditText
+import com.sun.xml.internal.ws.util.StringUtils
+import com.cogniance.yarik.metronotifier.db.DbUtils
 
 class DebugActivity extends Activity with Scalactivity {
 
@@ -22,6 +25,7 @@ class DebugActivity extends Activity with Scalactivity {
   lazy val list = findView[ListView](R.id.list);
   lazy val wifiManager = getSystemService(Context.WIFI_SERVICE).asInstanceOf[WifiManager];
   lazy val receiver = new WifiScanReceiver
+  lazy val stationName = findView[EditText](R.id.station_name)
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState);
@@ -43,7 +47,7 @@ class DebugActivity extends Activity with Scalactivity {
   }
 
   override def onCreateOptionsMenu(menu: Menu) = {
-    // Inflate the menu; this adds items to the action bar if it is present.
+//     Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.activity_debug, menu);
     true
   }
@@ -58,6 +62,27 @@ class DebugActivity extends Activity with Scalactivity {
 
   def scan(view: View) {
     wifiManager.startScan();
+  }
+  
+  def saveStation(view: View){
+    import Model._;
+    val name = stationName.getText().toString()
+    if(name!= null && !"".equals(name)){
+      implicit val context = this;
+      
+      val currentStation = DbUtils.saveStation(name)
+      
+      val results = wifiManager.getScanResults();
+      val spots = results.map{ result =>
+        Spot(
+          id = -1,
+          station = currentStation,
+          ssid=result.SSID,
+          bssid=result.BSSID
+        )
+      }
+      DbUtils.saveSpots(spots)
+    }
   }
 
 }
