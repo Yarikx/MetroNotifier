@@ -2,18 +2,32 @@ package com.cogniance.yarik.metronotifier
 
 import android.content.ContentValues
 import android.net.wifi.ScanResult
+import java.lang.Long
 
 object Model {
+  
+  trait DbEntity{
+    val id:java.lang.Long
+  }
 
   case class Spot(
-    val id: Long,
     val ssid: String,
     val bssid: String,
     val station: Station)
+    
+  object Spot{
+    def apply(rId: Long, ssid:String, bssid: String, station: Station)={
+      new Spot(ssid, bssid, station) with DbEntity{val id = rId}
+    }
+  }
 
   case class Station(
-    val id: Long,
     val name: String)
+  
+  object Station{
+    def apply(rId: Long, name:String)=
+      new Station(name) with DbEntity{val id = rId}
+  }
 
   implicit def spot2contentValues(spot: Spot) = {
     import com.cogniance.yarik.metronotifier.db.DbOpenHelper._
@@ -22,7 +36,10 @@ object Model {
     val values = new ContentValues()
     values.put(SSID, spot.ssid)
     values.put(BSSID, spot.bssid)
-    values.put(STATION_ID, spot.station.id.asInstanceOf[Long])
+    spot.station match{
+      case e: DbEntity => values.put(STATION_ID, e.id)
+      case _ => throw new IllegalStateException("station has no id")
+    }
     values
   }
   

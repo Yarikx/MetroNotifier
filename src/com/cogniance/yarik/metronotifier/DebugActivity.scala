@@ -60,22 +60,24 @@ class DebugActivity extends Activity with Scalactivity {
     }
   }
 
-  def scan(view: View) {
-    wifiManager.startScan();
+  def scan(view: View)= wifiManager.startScan();
+  
+  def showAll(view: View) {
+    val qqq = DbUtils.getAllSpots
+    list.setAdapter(new ArrayAdapter(DebugActivity.this,
+    android.R.layout.simple_list_item_1, qqq.map(_.toString)));
   }
   
   def saveStation(view: View){
     import Model._;
     val name = stationName.getText().toString()
     if(name!= null && !"".equals(name)){
-      implicit val context = this;
       
       val currentStation = DbUtils.saveStation(name)
       
       val results = wifiManager.getScanResults();
       val spots = results.map{ result =>
         Spot(
-          id = -1,
           station = currentStation,
           ssid=result.SSID,
           bssid=result.BSSID

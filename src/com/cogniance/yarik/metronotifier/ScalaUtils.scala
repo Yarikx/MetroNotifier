@@ -6,6 +6,9 @@ import android.os.AsyncTask
 object ScalaUtils {
   
   trait Scalactivity extends Activity{
+    
+    implicit val context = this
+    
     def findView[A](id: Int) = findViewById(id).asInstanceOf[A]
     
     def inUi(r: Runnable)=runOnUiThread(r)
